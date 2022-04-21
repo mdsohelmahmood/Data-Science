@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Simply Stepwise and Weighted Regression | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Simply Stepwise and Weighted Regression" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Find the best regression model" />
+<meta property="og:description" content="Find the best regression model" />
+<link rel="canonical" href="https://mdsohelmahmood.github.io/data-science/2022/04/21/Simple-Stepwise-and-Weighted-Regression.html" />
+<meta property="og:url" content="https://mdsohelmahmood.github.io/data-science/2022/04/21/Simple-Stepwise-and-Weighted-Regression.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-04-21T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Simply Stepwise and Weighted Regression" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-04-21T00:00:00-05:00","datePublished":"2022-04-21T00:00:00-05:00","description":"Find the best regression model","headline":"Simply Stepwise and Weighted Regression","mainEntityOfPage":{"@type":"WebPage","@id":"https://mdsohelmahmood.github.io/data-science/2022/04/21/Simple-Stepwise-and-Weighted-Regression.html"},"url":"https://mdsohelmahmood.github.io/data-science/2022/04/21/Simple-Stepwise-and-Weighted-Regression.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-science/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mdsohelmahmood.github.io/data-science/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/data-science/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-science/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-science/about/">About Me</a><a class="page-link" href="/data-science/search/">Search</a><a class="page-link" href="/data-science/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Simply Stepwise and Weighted Regression</h1><p class="page-description">Find the best regression model</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-21T00:00:00-05:00" itemprop="datePublished">
+        Apr 21, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/mdsohelmahmood/data-science/tree/master/_notebooks/2022-04-21-Simple Stepwise and Weighted Regression.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-science/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/mdsohelmahmood/data-science/master?filepath=_notebooks%2F2022-04-21-Simple+Stepwise+and+Weighted+Regression.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-science/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/mdsohelmahmood/data-science/blob/master/_notebooks/2022-04-21-Simple Stepwise and Weighted Regression.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-science/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fmdsohelmahmood%2Fdata-science%2Fblob%2Fmaster%2F_notebooks%2F2022-04-21-Simple+Stepwise+and+Weighted+Regression.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/data-science/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-04-21-Simple Stepwise and Weighted Regression.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Ridge</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">Lasso</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">py</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">linear_model</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;Car/toyota.csv&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>year</th>
+      <th>price</th>
+      <th>transmission</th>
+      <th>mileage</th>
+      <th>fuelType</th>
+      <th>tax</th>
+      <th>mpg</th>
+      <th>engineSize</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>GT86</td>
+      <td>2016</td>
+      <td>16000</td>
+      <td>Manual</td>
+      <td>24089</td>
+      <td>Petrol</td>
+      <td>265</td>
+      <td>36.2</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>GT86</td>
+      <td>2017</td>
+      <td>15995</td>
+      <td>Manual</td>
+      <td>18615</td>
+      <td>Petrol</td>
+      <td>145</td>
+      <td>36.2</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>GT86</td>
+      <td>2015</td>
+      <td>13998</td>
+      <td>Manual</td>
+      <td>27469</td>
+      <td>Petrol</td>
+      <td>265</td>
+      <td>36.2</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>GT86</td>
+      <td>2017</td>
+      <td>18998</td>
+      <td>Manual</td>
+      <td>14736</td>
+      <td>Petrol</td>
+      <td>150</td>
+      <td>36.2</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>GT86</td>
+      <td>2017</td>
+      <td>17498</td>
+      <td>Manual</td>
+      <td>36284</td>
+      <td>Petrol</td>
+      <td>145</td>
+      <td>36.2</td>
+      <td>2.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(6738, 10)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Stepwise-rewgression">Stepwise rewgression<a class="anchor-link" href="#Stepwise-rewgression"> </a></h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mileage&#39;</span><span class="p">,</span> <span class="s1">&#39;tax&#39;</span><span class="p">,</span> <span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;engineSize&#39;</span><span class="p">]</span>
+<span class="c1"># num = [&#39;mileage&#39;, &#39;tax&#39;, &#39;mpg&#39;, &#39;engineSize&#39;,  &#39;engineSize2&#39;]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mileage&#39;</span><span class="p">,</span> <span class="s1">&#39;tax&#39;</span><span class="p">,</span> <span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;engineSize&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">),</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">num</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;With predictor </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-squared = &quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">rsquared</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Adj R-squared =&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">rsquared_adj</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AIC =&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">aic</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BIC =&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">bic</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>With predictor [&#39;mileage&#39;]
+R-squared =  0.3573100248074934
+Adj R-squared = 0.3572146277501693
+AIC = 144834.10437945105
+BIC = 144840.91989787502
+
+
+With predictor [&#39;mileage&#39;, &#39;tax&#39;]
+R-squared =  0.6362397640051107
+Adj R-squared = 0.6361317591844472
+AIC = 141001.0537912962
+BIC = 141014.68482814415
+
+
+With predictor [&#39;mileage&#39;, &#39;tax&#39;, &#39;mpg&#39;]
+R-squared =  0.7965603667829384
+Adj R-squared = 0.7964697477926412
+AIC = 137087.42922847485
+BIC = 137107.87578374674
+
+
+With predictor [&#39;mileage&#39;, &#39;tax&#39;, &#39;mpg&#39;, &#39;engineSize&#39;]
+R-squared =  0.9423743984966928
+Adj R-squared = 0.9423401688551702
+AIC = 128590.10000072751
+BIC = 128617.36207442338
+
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>price</td>      <th>  R-squared (uncentered):</th>      <td>   0.942</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared (uncentered):</th> <td>   0.942</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>          <td>2.753e+04</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Fri, 15 Apr 2022</td> <th>  Prob (F-statistic):</th>           <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>11:16:33</td>     <th>  Log-Likelihood:    </th>          <td> -64291.</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>  6738</td>      <th>  AIC:               </th>          <td>1.286e+05</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>  6734</td>      <th>  BIC:               </th>          <td>1.286e+05</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     4</td>      <th>                     </th>              <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>              <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+       <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P&gt;|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>mileage</th>    <td>   -0.1522</td> <td>    0.002</td> <td>  -68.454</td> <td> 0.000</td> <td>   -0.157</td> <td>   -0.148</td>
+</tr>
+<tr>
+  <th>tax</th>        <td>   -1.6673</td> <td>    0.562</td> <td>   -2.967</td> <td> 0.003</td> <td>   -2.769</td> <td>   -0.566</td>
+</tr>
+<tr>
+  <th>mpg</th>        <td>   -1.7408</td> <td>    1.664</td> <td>   -1.046</td> <td> 0.295</td> <td>   -5.002</td> <td>    1.520</td>
+</tr>
+<tr>
+  <th>engineSize</th> <td> 1.112e+04</td> <td>   85.197</td> <td>  130.535</td> <td> 0.000</td> <td>  1.1e+04</td> <td> 1.13e+04</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>2229.863</td> <th>  Durbin-Watson:     </th> <td>   0.914</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>11951.306</td>
+</tr>
+<tr>
+  <th>Skew:</th>           <td> 1.492</td>  <th>  Prob(JB):          </th> <td>    0.00</td> 
+</tr>
+<tr>
+  <th>Kurtosis:</th>       <td> 8.802</td>  <th>  Cond. No.          </th> <td>6.18e+04</td> 
+</tr>
+</table><br /><br />Notes:<br />[1] R² is computed without centering (uncentered) since the model does not contain a constant.<br />[2] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br />[3] The condition number is large, 6.18e+04. This might indicate that there are<br />strong multicollinearity or other numerical problems.
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Use-&quot;RegscorePy&quot;">Use "RegscorePy"<a class="anchor-link" href="#Use-&quot;RegscorePy&quot;"> </a></h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">RegscorePy</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="formula-https://online.stat.psu.edu/stat462/node/199/">formula <a href="https://online.stat.psu.edu/stat462/node/199/">https://online.stat.psu.edu/stat462/node/199/</a><a class="anchor-link" href="#formula-https://online.stat.psu.edu/stat462/node/199/"> </a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="AIC">AIC<a class="anchor-link" href="#AIC"> </a></h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+<span class="n">aic</span><span class="o">.</span><span class="n">aic</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># using RegscorePy</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>109256.10676454737</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n</span><span class="o">=</span><span class="mi">6738</span>
+<span class="n">P</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">ssr</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">P</span> <span class="c1"># using formula</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>109256.10676454735</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="BIC">BIC<a class="anchor-link" href="#BIC"> </a></h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+<span class="n">bic</span><span class="o">.</span><span class="n">bic</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># using RegscorePy</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>109283.36883824323</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n</span><span class="o">=</span><span class="mi">6738</span>
+<span class="n">P</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">ssr</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">P</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># using formula</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>109283.36883824322</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Weighted-Regression">Weighted Regression<a class="anchor-link" href="#Weighted-Regression"> </a></h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mileage</th>
+      <th>tax</th>
+      <th>mpg</th>
+      <th>engineSize</th>
+      <th>engineSize2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>24089</td>
+      <td>265</td>
+      <td>36.2</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>18615</td>
+      <td>145</td>
+      <td>36.2</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>27469</td>
+      <td>265</td>
+      <td>36.2</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>14736</td>
+      <td>150</td>
+      <td>36.2</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>36284</td>
+      <td>145</td>
+      <td>36.2</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>6733</th>
+      <td>30000</td>
+      <td>20</td>
+      <td>58.9</td>
+      <td>1.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>6734</th>
+      <td>36154</td>
+      <td>125</td>
+      <td>50.4</td>
+      <td>1.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>6735</th>
+      <td>46000</td>
+      <td>125</td>
+      <td>57.6</td>
+      <td>1.4</td>
+      <td>3.4</td>
+    </tr>
+    <tr>
+      <th>6736</th>
+      <td>60700</td>
+      <td>125</td>
+      <td>50.4</td>
+      <td>1.3</td>
+      <td>3.3</td>
+    </tr>
+    <tr>
+      <th>6737</th>
+      <td>45128</td>
+      <td>125</td>
+      <td>50.4</td>
+      <td>1.3</td>
+      <td>3.3</td>
+    </tr>
+  </tbody>
+</table>
+<p>6738 rows × 5 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">mpg</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>2.8</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;mpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mileage</th>
+      <th>tax</th>
+      <th>mpg</th>
+      <th>engineSize</th>
+      <th>engineSize2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6562</th>
+      <td>50</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6552</th>
+      <td>3350</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6594</th>
+      <td>1259</td>
+      <td>265</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6595</th>
+      <td>10250</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6617</th>
+      <td>150</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6575</th>
+      <td>7123</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6596</th>
+      <td>5000</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6563</th>
+      <td>100</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6583</th>
+      <td>4</td>
+      <td>265</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>6576</th>
+      <td>5190</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+    </tr>
+    <tr>
+      <th>5966</th>
+      <td>16429</td>
+      <td>145</td>
+      <td>6.0</td>
+      <td>1.2</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>6694</th>
+      <td>100000</td>
+      <td>265</td>
+      <td>23.9</td>
+      <td>4.2</td>
+      <td>6.2</td>
+    </tr>
+    <tr>
+      <th>6693</th>
+      <td>143000</td>
+      <td>325</td>
+      <td>27.2</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>6698</th>
+      <td>60000</td>
+      <td>540</td>
+      <td>29.7</td>
+      <td>4.5</td>
+      <td>6.5</td>
+    </tr>
+    <tr>
+      <th>6667</th>
+      <td>6254</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6680</th>
+      <td>789</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6677</th>
+      <td>22845</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6649</th>
+      <td>11712</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6657</th>
+      <td>10083</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6658</th>
+      <td>11619</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6682</th>
+      <td>3500</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6684</th>
+      <td>4</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6687</th>
+      <td>27</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6688</th>
+      <td>1244</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6689</th>
+      <td>4512</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6653</th>
+      <td>12543</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6695</th>
+      <td>4000</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6699</th>
+      <td>6836</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6651</th>
+      <td>200</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6675</th>
+      <td>15200</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6659</th>
+      <td>16634</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6672</th>
+      <td>3104</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6663</th>
+      <td>8967</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6666</th>
+      <td>11404</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6661</th>
+      <td>3390</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6670</th>
+      <td>1000</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>6671</th>
+      <td>8813</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+    </tr>
+    <tr>
+      <th>799</th>
+      <td>45229</td>
+      <td>330</td>
+      <td>30.4</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>6409</th>
+      <td>44000</td>
+      <td>325</td>
+      <td>30.7</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>6690</th>
+      <td>80750</td>
+      <td>325</td>
+      <td>31.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>6696</th>
+      <td>113000</td>
+      <td>555</td>
+      <td>31.4</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>761</th>
+      <td>61000</td>
+      <td>330</td>
+      <td>31.4</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>6691</th>
+      <td>160000</td>
+      <td>325</td>
+      <td>31.4</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>6686</th>
+      <td>174419</td>
+      <td>565</td>
+      <td>31.4</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>785</th>
+      <td>116000</td>
+      <td>330</td>
+      <td>31.4</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>776</th>
+      <td>140000</td>
+      <td>325</td>
+      <td>32.1</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>763</th>
+      <td>113000</td>
+      <td>325</td>
+      <td>32.1</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>6556</th>
+      <td>30848</td>
+      <td>260</td>
+      <td>32.8</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>4000</td>
+      <td>145</td>
+      <td>32.8</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>6629</th>
+      <td>92007</td>
+      <td>260</td>
+      <td>32.8</td>
+      <td>3.0</td>
+      <td>5.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;mpg_weighted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="o">.</span><span class="n">mpg</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;mpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>year</th>
+      <th>price</th>
+      <th>transmission</th>
+      <th>mileage</th>
+      <th>fuelType</th>
+      <th>tax</th>
+      <th>mpg</th>
+      <th>engineSize</th>
+      <th>engineSize2</th>
+      <th>mpg_weighted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6562</th>
+      <td>Hilux</td>
+      <td>2020</td>
+      <td>18495</td>
+      <td>Manual</td>
+      <td>50</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6552</th>
+      <td>Hilux</td>
+      <td>2019</td>
+      <td>28495</td>
+      <td>Automatic</td>
+      <td>3350</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6594</th>
+      <td>Hilux</td>
+      <td>2020</td>
+      <td>39257</td>
+      <td>Automatic</td>
+      <td>1259</td>
+      <td>Diesel</td>
+      <td>265</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6595</th>
+      <td>Hilux</td>
+      <td>2019</td>
+      <td>27850</td>
+      <td>Automatic</td>
+      <td>10250</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6617</th>
+      <td>Hilux</td>
+      <td>2020</td>
+      <td>36995</td>
+      <td>Automatic</td>
+      <td>150</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6575</th>
+      <td>Hilux</td>
+      <td>2019</td>
+      <td>26500</td>
+      <td>Automatic</td>
+      <td>7123</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6596</th>
+      <td>Hilux</td>
+      <td>2020</td>
+      <td>30500</td>
+      <td>Automatic</td>
+      <td>5000</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6563</th>
+      <td>Hilux</td>
+      <td>2020</td>
+      <td>23495</td>
+      <td>Manual</td>
+      <td>100</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6583</th>
+      <td>Hilux</td>
+      <td>2019</td>
+      <td>26995</td>
+      <td>Automatic</td>
+      <td>4</td>
+      <td>Diesel</td>
+      <td>265</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6576</th>
+      <td>Hilux</td>
+      <td>2019</td>
+      <td>20500</td>
+      <td>Manual</td>
+      <td>5190</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>2.8</td>
+      <td>2.4</td>
+      <td>4.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>5966</th>
+      <td>C-HR</td>
+      <td>2018</td>
+      <td>16690</td>
+      <td>Manual</td>
+      <td>16429</td>
+      <td>Petrol</td>
+      <td>145</td>
+      <td>6.0</td>
+      <td>1.2</td>
+      <td>3.2</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>6694</th>
+      <td>Land Cruiser</td>
+      <td>1998</td>
+      <td>19990</td>
+      <td>Manual</td>
+      <td>100000</td>
+      <td>Diesel</td>
+      <td>265</td>
+      <td>23.9</td>
+      <td>4.2</td>
+      <td>6.2</td>
+      <td>21.1</td>
+    </tr>
+    <tr>
+      <th>6693</th>
+      <td>Land Cruiser</td>
+      <td>2004</td>
+      <td>6450</td>
+      <td>Automatic</td>
+      <td>143000</td>
+      <td>Diesel</td>
+      <td>325</td>
+      <td>27.2</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>24.4</td>
+    </tr>
+    <tr>
+      <th>6698</th>
+      <td>Land Cruiser</td>
+      <td>2014</td>
+      <td>44990</td>
+      <td>Automatic</td>
+      <td>60000</td>
+      <td>Diesel</td>
+      <td>540</td>
+      <td>29.7</td>
+      <td>4.5</td>
+      <td>6.5</td>
+      <td>26.9</td>
+    </tr>
+    <tr>
+      <th>6667</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>50995</td>
+      <td>Semi-Auto</td>
+      <td>6254</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6680</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>48995</td>
+      <td>Automatic</td>
+      <td>789</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6677</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>42990</td>
+      <td>Semi-Auto</td>
+      <td>22845</td>
+      <td>Diesel</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6649</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>39498</td>
+      <td>Semi-Auto</td>
+      <td>11712</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6657</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>42444</td>
+      <td>Semi-Auto</td>
+      <td>10083</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6658</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>40999</td>
+      <td>Semi-Auto</td>
+      <td>11619</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6682</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>50995</td>
+      <td>Automatic</td>
+      <td>3500</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6684</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>47885</td>
+      <td>Automatic</td>
+      <td>4</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6687</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>45950</td>
+      <td>Automatic</td>
+      <td>27</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6688</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>52990</td>
+      <td>Automatic</td>
+      <td>1244</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6689</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>44995</td>
+      <td>Automatic</td>
+      <td>4512</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6653</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>39498</td>
+      <td>Semi-Auto</td>
+      <td>12543</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6695</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>54550</td>
+      <td>Automatic</td>
+      <td>4000</td>
+      <td>Diesel</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6699</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>49995</td>
+      <td>Automatic</td>
+      <td>6836</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6651</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>44995</td>
+      <td>Semi-Auto</td>
+      <td>200</td>
+      <td>Diesel</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6675</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>44935</td>
+      <td>Semi-Auto</td>
+      <td>15200</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6659</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>42995</td>
+      <td>Semi-Auto</td>
+      <td>16634</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6672</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>52291</td>
+      <td>Semi-Auto</td>
+      <td>3104</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6663</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>45995</td>
+      <td>Semi-Auto</td>
+      <td>8967</td>
+      <td>Diesel</td>
+      <td>150</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6666</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>40995</td>
+      <td>Semi-Auto</td>
+      <td>11404</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6661</th>
+      <td>Land Cruiser</td>
+      <td>2020</td>
+      <td>50995</td>
+      <td>Semi-Auto</td>
+      <td>3390</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6670</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>54991</td>
+      <td>Semi-Auto</td>
+      <td>1000</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>6671</th>
+      <td>Land Cruiser</td>
+      <td>2019</td>
+      <td>47795</td>
+      <td>Semi-Auto</td>
+      <td>8813</td>
+      <td>Diesel</td>
+      <td>145</td>
+      <td>30.1</td>
+      <td>2.8</td>
+      <td>4.8</td>
+      <td>27.3</td>
+    </tr>
+    <tr>
+      <th>799</th>
+      <td>RAV4</td>
+      <td>2004</td>
+      <td>5495</td>
+      <td>Automatic</td>
+      <td>45229</td>
+      <td>Petrol</td>
+      <td>330</td>
+      <td>30.4</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>27.6</td>
+    </tr>
+    <tr>
+      <th>6409</th>
+      <td>Avensis</td>
+      <td>2004</td>
+      <td>3495</td>
+      <td>Automatic</td>
+      <td>44000</td>
+      <td>Petrol</td>
+      <td>325</td>
+      <td>30.7</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>27.9</td>
+    </tr>
+    <tr>
+      <th>6690</th>
+      <td>Land Cruiser</td>
+      <td>2005</td>
+      <td>8000</td>
+      <td>Manual</td>
+      <td>80750</td>
+      <td>Diesel</td>
+      <td>325</td>
+      <td>31.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>28.2</td>
+    </tr>
+    <tr>
+      <th>6696</th>
+      <td>Land Cruiser</td>
+      <td>2006</td>
+      <td>7240</td>
+      <td>Automatic</td>
+      <td>113000</td>
+      <td>Diesel</td>
+      <td>555</td>
+      <td>31.4</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>28.6</td>
+    </tr>
+    <tr>
+      <th>761</th>
+      <td>RAV4</td>
+      <td>2008</td>
+      <td>5195</td>
+      <td>Automatic</td>
+      <td>61000</td>
+      <td>Petrol</td>
+      <td>330</td>
+      <td>31.4</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>28.6</td>
+    </tr>
+    <tr>
+      <th>6691</th>
+      <td>Land Cruiser</td>
+      <td>2004</td>
+      <td>5975</td>
+      <td>Automatic</td>
+      <td>160000</td>
+      <td>Diesel</td>
+      <td>325</td>
+      <td>31.4</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>28.6</td>
+    </tr>
+    <tr>
+      <th>6686</th>
+      <td>Land Cruiser</td>
+      <td>2008</td>
+      <td>6950</td>
+      <td>Automatic</td>
+      <td>174419</td>
+      <td>Diesel</td>
+      <td>565</td>
+      <td>31.4</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>28.6</td>
+    </tr>
+    <tr>
+      <th>785</th>
+      <td>RAV4</td>
+      <td>2008</td>
+      <td>4480</td>
+      <td>Automatic</td>
+      <td>116000</td>
+      <td>Petrol</td>
+      <td>330</td>
+      <td>31.4</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>28.6</td>
+    </tr>
+    <tr>
+      <th>776</th>
+      <td>RAV4</td>
+      <td>2002</td>
+      <td>1600</td>
+      <td>Manual</td>
+      <td>140000</td>
+      <td>Petrol</td>
+      <td>325</td>
+      <td>32.1</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>29.3</td>
+    </tr>
+    <tr>
+      <th>763</th>
+      <td>RAV4</td>
+      <td>2005</td>
+      <td>2394</td>
+      <td>Manual</td>
+      <td>113000</td>
+      <td>Petrol</td>
+      <td>325</td>
+      <td>32.1</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>29.3</td>
+    </tr>
+    <tr>
+      <th>6556</th>
+      <td>Hilux</td>
+      <td>2016</td>
+      <td>19498</td>
+      <td>Automatic</td>
+      <td>30848</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>32.8</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>30.0</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>GT86</td>
+      <td>2019</td>
+      <td>24990</td>
+      <td>Automatic</td>
+      <td>4000</td>
+      <td>Petrol</td>
+      <td>145</td>
+      <td>32.8</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>30.0</td>
+    </tr>
+    <tr>
+      <th>6629</th>
+      <td>Hilux</td>
+      <td>2013</td>
+      <td>12000</td>
+      <td>Automatic</td>
+      <td>92007</td>
+      <td>Diesel</td>
+      <td>260</td>
+      <td>32.8</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>30.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mileage&#39;</span><span class="p">,</span> <span class="s1">&#39;tax&#39;</span><span class="p">,</span> <span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;engineSize&#39;</span><span class="p">]</span>
+<span class="c1"># num = [&#39;mileage&#39;, &#39;tax&#39;, &#39;mpg&#39;, &#39;engineSize&#39;, &#39;mpg_weighted&#39;]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mileage&#39;</span><span class="p">,</span> <span class="s1">&#39;tax&#39;</span><span class="p">,</span> <span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;engineSize&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">),</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">num</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([-1.47097078e-01,  2.71207473e+00,  3.22056993e+01,  1.18159759e+04])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">),</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">num</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span>
+    
+    <span class="n">model</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;mpg_weighted&#39;</span><span class="p">])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([-1.34164121e-01,  5.10535692e+00,  4.22850836e+01,  1.15948701e+04])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><a class="u-url" href="/data-science/2022/04/21/Simple-Stepwise-and-Weighted-Regression.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-science/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-science/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-science/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" target="_blank" title="fastai"><svg class="svg-icon grey"><use xlink:href="/data-science/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" target="_blank" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/data-science/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
