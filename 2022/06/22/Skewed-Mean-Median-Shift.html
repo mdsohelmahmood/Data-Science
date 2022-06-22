@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Mean and Median for Skewed Distribution | fastpages</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Mean and Median for Skewed Distribution" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Statistics for long tailed distribution" />
+<meta property="og:description" content="Statistics for long tailed distribution" />
+<link rel="canonical" href="https://mdsohelmahmood.github.io/data-science/2022/06/22/Skewed-Mean-Median-Shift.html" />
+<meta property="og:url" content="https://mdsohelmahmood.github.io/data-science/2022/06/22/Skewed-Mean-Median-Shift.html" />
+<meta property="og:site_name" content="fastpages" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-06-22T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Mean and Median for Skewed Distribution" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-06-22T00:00:00-05:00","datePublished":"2022-06-22T00:00:00-05:00","description":"Statistics for long tailed distribution","headline":"Mean and Median for Skewed Distribution","mainEntityOfPage":{"@type":"WebPage","@id":"https://mdsohelmahmood.github.io/data-science/2022/06/22/Skewed-Mean-Median-Shift.html"},"url":"https://mdsohelmahmood.github.io/data-science/2022/06/22/Skewed-Mean-Median-Shift.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-science/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mdsohelmahmood.github.io/data-science/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/data-science/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-science/">fastpages</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-science/about/">About Me</a><a class="page-link" href="/data-science/search/">Search</a><a class="page-link" href="/data-science/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Mean and Median for Skewed Distribution</h1><p class="page-description">Statistics for long tailed distribution</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-06-22T00:00:00-05:00" itemprop="datePublished">
+        Jun 22, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/mdsohelmahmood/data-science/tree/master/_notebooks/2022-06-22-Skewed Mean Median Shift.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-science/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/mdsohelmahmood/data-science/master?filepath=_notebooks%2F2022-06-22-Skewed+Mean+Median+Shift.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-science/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/mdsohelmahmood/data-science/blob/master/_notebooks/2022-06-22-Skewed Mean Median Shift.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-science/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fmdsohelmahmood%2Fdata-science%2Fblob%2Fmaster%2F_notebooks%2F2022-06-22-Skewed+Mean+Median+Shift.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/data-science/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-06-22-Skewed Mean Median Shift.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">11</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(3, 17)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(array([2., 1., 1., 2., 2., 6., 3., 3., 1., 2.]),
+ array([ 3. ,  4.4,  5.8,  7.2,  8.6, 10. , 11.4, 12.8, 14.2, 15.6, 17. ]),
+ &lt;BarContainer object of 10 artists&gt;)</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+" />
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(10.391304347826088, 10.0)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(array([17.,  6.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.]),
+ array([  3. ,  12.7,  22.4,  32.1,  41.8,  51.5,  61.2,  70.9,  80.6,
+         90.3, 100. ]),
+ &lt;BarContainer object of 10 artists&gt;)</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+" />
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(14.125, 10.5)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><a class="u-url" href="/data-science/2022/06/22/Skewed-Mean-Median-Shift.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-science/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-science/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-science/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>An easy to use blogging platform with support for Jupyter Notebooks.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" target="_blank" title="fastai"><svg class="svg-icon grey"><use xlink:href="/data-science/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" target="_blank" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/data-science/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
